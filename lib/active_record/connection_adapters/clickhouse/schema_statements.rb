@@ -102,7 +102,7 @@ module ActiveRecord
         def apply_format(sql, format)
           format ? "#{sql} FORMAT #{format}" : sql
         end
-
+        
         def process_response(res)
           case res.code.to_i
           when 200
