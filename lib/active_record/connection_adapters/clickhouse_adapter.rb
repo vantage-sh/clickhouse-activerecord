@@ -5,6 +5,7 @@ require 'arel/nodes/final'
 require 'arel/nodes/settings'
 require 'arel/nodes/using'
 require 'active_record/connection_adapters/clickhouse/oid/array'
+require 'active_record/connection_adapters/clickhouse/oid/map'
 require 'active_record/connection_adapters/clickhouse/oid/date'
 require 'active_record/connection_adapters/clickhouse/oid/date_time'
 require 'active_record/connection_adapters/clickhouse/oid/big_integer'
@@ -206,6 +207,10 @@ module ActiveRecord
           # register_class_with_limit m, %r(Array), Clickhouse::OID::Array
           m.register_type(%r(Array)) do |sql_type|
             Clickhouse::OID::Array.new(sql_type)
+          end
+
+          m.register_type(%r(Map)) do |sql_type|
+            Clickhouse::OID::Map.new(sql_type)
           end
         end
       end
