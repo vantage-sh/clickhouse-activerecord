@@ -78,9 +78,9 @@ module ActiveRecord
           end
         end
 
-        def do_execute(sql, name = nil, format: DEFAULT_RESPONSE_FORMAT, settings: {})
+        def do_execute(sql, name = nil, format: DEFAULT_RESPONSE_FORMAT, settings: {}, exclude_database: false)
           log(sql, "#{adapter_name} #{name}") do
-            res = request(sql, format, settings)
+            res = request(sql, format, settings, exclude_database: exclude_database)
             process_response(res, format)
           end
         end
@@ -122,9 +122,12 @@ module ActiveRecord
         # @param [String, nil] format
         # @param [Hash] settings
         # @return [Net::HTTPResponse]
-        def request(sql, format = nil, settings = {})
+        def request(sql, format = nil, settings = {}, exclude_database: false)
           formatted_sql = apply_format(sql, format)
           request_params = @connection_config || {}
+          if exclude_database
+            request_params = request_params.except(:database)
+          end
           @connection.post("/?#{request_params.merge(settings).to_param}", formatted_sql, 'User-Agent' => "Clickhouse ActiveRecord #{ClickhouseActiverecord::VERSION}")
         end
 
