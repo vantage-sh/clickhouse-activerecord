@@ -138,6 +138,17 @@ module ActiveRecord
         @config[:migrations_paths] || 'db/migrate_clickhouse'
       end
 
+      def active?
+        # Matches Postgres' implementation.
+        @lock.synchronize do
+          do_execute("SELECT 1", format: nil)
+        end
+
+        true
+      rescue EOFError
+        false
+      end
+
       def arel_visitor # :nodoc:
         Arel::Visitors::Clickhouse.new(self)
       end
