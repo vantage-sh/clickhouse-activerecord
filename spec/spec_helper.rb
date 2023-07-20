@@ -43,6 +43,16 @@ ActiveRecord::Base.configurations = HashWithIndifferentAccess.new(
     password: nil,
     use_metadata_table: false,
     cluster_name: ENV['CLICKHOUSE_CLUSTER'],
+  },
+  unknown: {
+    adapter: 'clickhouse',
+    host: 'localhost',
+    port: 8123,
+    database: 'unknown',
+    username: nil,
+    password: nil,
+    use_metadata_table: false,
+    cluster_name: ENV['CLICKHOUSE_CLUSTER']
   }
 )
 
