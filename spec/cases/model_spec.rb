@@ -121,4 +121,26 @@ RSpec.describe 'Model', :migrations do
       expect(model.connection.active?).to eql(false)
     end
   end
+
+  context 'with an unknown database' do
+    let!(:model) do
+      Class.new(ActiveRecord::Base) do
+        self.table_name = 'events'
+      end
+    end
+
+    before do
+      ActiveRecord::Base.establish_connection(:unknown)
+    end
+
+    after do
+      ActiveRecord::Base.establish_connection(:default)
+    end
+
+    it 'raises ActiveRecord::NoDatabaseError' do
+      expect do
+        model.connection.execute("SELECT 1")
+      end.to raise_error(ActiveRecord::StatementInvalid, /ActiveRecord::NoDatabaseError/)
+    end
+  end
 end
