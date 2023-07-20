@@ -118,8 +118,17 @@ module ActiveRecord
               res.body.presence && JSON.parse(res.body)
             end
           else
-            raise ActiveRecord::ActiveRecordError,
-              "Response code: #{res.code}:\n#{res.body}"
+            if res.body.to_s.include?("UNKNOWN_DATABASE")
+              raise(
+                ActiveRecord::NoDatabaseError,
+                "Response code: #{res.code}:\n#{res.body}"
+              )
+            else
+              raise(
+                ActiveRecord::ActiveRecordError,
+                "Response code: #{res.code}:\n#{res.body}"
+              )
+            end
           end
         rescue JSON::ParserError
           res.body

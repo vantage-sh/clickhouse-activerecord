@@ -42,6 +42,14 @@ ActiveRecord::Base.configurations = HashWithIndifferentAccess.new(
     database: 'test',
     username: nil,
     password: nil
+  },
+  unknown: {
+    adapter: 'clickhouse',
+    host: 'localhost',
+    port: 8123,
+    database: 'unknown',
+    username: nil,
+    password: nil
   }
 )
 
